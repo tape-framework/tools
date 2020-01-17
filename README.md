@@ -73,6 +73,7 @@ clearing timeouts and intervals.
 (ns my.app
   (:require [tape.tools.timeouts.controller :as timeouts.c]
             [tape.tools.intervals.controller :as intervals.c]))
+;; also add ::timeouts.c/module & ::intervals.c/module to the ig config map
 ```
 
 A timeout is a map with 3 positions: the number of milliseconds, an event
