@@ -29,7 +29,8 @@ In your view namespace require `tape.tools`:
 
 ```cljs
 (ns blog.app.posts.view
-  (:require [tape.tools :as tools]))
+  (:require [reagent.core :as r]
+            [tape.tools :as tools]))
 ```
 
 **The lens pattern**
