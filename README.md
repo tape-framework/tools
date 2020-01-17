@@ -41,7 +41,7 @@ write by dispatching an event.
 (defn form-fields []
   (let [lens (tools/lens ::posts.c/post ::posts.c/field)
         title (r/cursor lens [:title])]
-    [:input {:value title
+    [:input {:value @title
              :on-change #(reset! title (-> % .-target .-value))}]))
 ```
 
