@@ -1,0 +1,3 @@
+{:deps    {tape/mvc {:local/root "../mvc"}}
+ :aliases {:test {:extra-paths ["test"]
+                  :extra-deps  {day8.re-frame/test {:mvn/version "0.1.5"}}}}}
