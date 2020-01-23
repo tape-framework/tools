@@ -2,7 +2,7 @@
 
 STATUS: Pre-alpha, in design and prototyping phase.
 
-#### About
+### About
 
 `tape.tools`
 
@@ -10,12 +10,7 @@ Some common pieces of infrastructure:
 - input data helpers
 - timeouts & intervals effects
 
-#### Usage
-
-You must be familiar with `tape.module` and `tape.mvc` (particularly the
-controller part) before proceeding.
-
-##### Install
+### Install
 
 Add `tape.tools` to your deps:
 
@@ -23,7 +18,12 @@ Add `tape.tools` to your deps:
 tape/tools {:local/root "../tools"}
 ```
 
-##### Input data helpers
+### Usage
+
+You must be familiar with `tape.module` and `tape.mvc` (particularly the
+controller part) before proceeding.
+
+#### The lens pattern
 
 In your view namespace require `tape.tools`:
 
@@ -31,8 +31,6 @@ In your view namespace require `tape.tools`:
 (ns blog.app.posts.view
   (:require [tape.tools :as tools]))
 ```
-
-**The lens pattern**
 
 A `tools/lens` is a helper for making cursors that read from a subscription and
 write by dispatching an event.
@@ -49,9 +47,34 @@ When the `title` cursor above is `reset!`, it dispatches an event:
 `[::posts.c/field :title "some value"]`. When it is `deref`'ed it reads the:
 `(:title @(rf/subscription [::posts.c/post]))` value.
 
-**HTML5 Constraint Validation**
+`tools/cursor` directly returns a Reagent cursor over a lens.
 
-The `tools/when-valid` helper can be used on forms to to check and show the
+#### Form tools
+
+In your view namespace require `tape.tools.ui.form`:
+
+```cljs
+(ns blog.app.posts.view
+  (:require [tape.tools.ui.forms :as forms]))
+```
+
+##### Inputs
+
+The `form/field` helper creates an input over an atom field. It's usually used
+in conjunction with a cursor over a `tools/lens`.
+
+```cljs
+(defn form-fields []
+  (let [cursor (tools/cursor ::posts.c/post ::posts.c/field)]
+    [:<>
+     [form/field {:type :text, :state cursor, :field :title}]
+     [form/field {:type :textarea, :state cursor, :field :description}]]))
+
+```
+
+##### Constraint Validation
+
+The `form/when-valid` helper can be used on forms to to check and show the
 HTML5 Constraint Validation API.
 
 ```cljs
@@ -64,7 +87,7 @@ If the form to which the button above belongs is valid, on clicking the button
 the `save` function is called; if the form is invalid the `save` function is
 not called and the form validity is reported.
 
-##### Timeouts and Intervals
+#### Timeouts and Intervals
 
 We have two controllers with event handlers and effect handlers for setting and
 clearing timeouts and intervals.
