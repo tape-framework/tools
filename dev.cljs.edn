@@ -1,0 +1,4 @@
+^{:watch-dirs   ["src" "test"]
+  :ring-handler tape.tools.server/app}
+{:main     tape.tools.cards
+ :devcards true}
