@@ -29,7 +29,8 @@ In your view namespace require `tape.tools`:
 
 ```cljs
 (ns blog.app.posts.view
-  (:require [tape.tools :as tools]))
+  (:require [reagent.core :as r]
+            [tape.tools :as tools]))
 ```
 
 A `tools/lens` is a helper for making cursors that read from a subscription and
@@ -39,7 +40,7 @@ write by dispatching an event.
 (defn form-fields []
   (let [lens (tools/lens ::posts.c/post ::posts.c/field)
         title (r/cursor lens [:title])]
-    [:input {:value title
+    [:input {:value @title
              :on-change #(reset! title (-> % .-target .-value))}]))
 ```
 
@@ -96,6 +97,7 @@ clearing timeouts and intervals.
 (ns my.app
   (:require [tape.tools.timeouts.controller :as timeouts.c]
             [tape.tools.intervals.controller :as intervals.c]))
+;; also add ::timeouts.c/module & ::intervals.c/module to the ig config map
 ```
 
 A timeout is a map with 3 positions: the number of milliseconds, an event
