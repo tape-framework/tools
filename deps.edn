@@ -1,5 +1,5 @@
 {:deps    {tape/mvc {:local/root "../mvc"}}
  :aliases {:test {:extra-paths ["test" "target"]
-                  :extra-deps  {day8.re-frame/test    {:mvn/version "0.1.5"}
-                                devcards              {:mvn/version "0.2.6"}
-                                org.webjars.npm/bulma {:mvn/version "0.8.0"}}}}}
+                  :extra-deps  {day8.re-frame/test    {}
+                                org.webjars.npm/bulma {}
+                                tape/dev              {:local/root "../dev"}}}}}

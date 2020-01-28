@@ -27,7 +27,7 @@ controller part) before proceeding.
 
 In your view namespace require `tape.tools`:
 
-```cljs
+```clojure
 (ns blog.app.posts.view
   (:require [reagent.core :as r]
             [tape.tools :as tools]))
@@ -36,7 +36,7 @@ In your view namespace require `tape.tools`:
 A `tools/lens` is a helper for making cursors that read from a subscription and
 write by dispatching an event.
 
-```cljs
+```clojure
 (defn form-fields []
   (let [lens (tools/lens ::posts.c/post ::posts.c/field)
         title (r/cursor lens [:title])]
@@ -54,7 +54,7 @@ When the `title` cursor above is `reset!`, it dispatches an event:
 
 In your view namespace require `tape.tools.ui.form`:
 
-```cljs
+```clojure
 (ns blog.app.posts.view
   (:require [tape.tools.ui.forms :as forms]))
 ```
@@ -64,7 +64,7 @@ In your view namespace require `tape.tools.ui.form`:
 The `form/field` helper creates an input over an atom field. It's usually used
 in conjunction with a cursor over a `tools/lens`.
 
-```cljs
+```clojure
 (defn form-fields []
   (let [cursor (tools/cursor ::posts.c/post ::posts.c/field)]
     [:<>
@@ -78,7 +78,7 @@ in conjunction with a cursor over a `tools/lens`.
 The `form/when-valid` helper can be used on forms to to check and show the
 HTML5 Constraint Validation API.
 
-```cljs
+```clojure
 (defn save-button []
   (let [save #(rf/dispatch [::posts.c/save])]
     [:button {:on-click (ui/when-valid save)} "Save"]))
@@ -93,7 +93,7 @@ not called and the form validity is reported.
 We have two controllers with event handlers and effect handlers for setting and
 clearing timeouts and intervals.
 
-```cljs
+```clojure
 (ns my.app
   (:require [tape.tools.timeouts.controller :as timeouts.c]
             [tape.tools.intervals.controller :as intervals.c]))
@@ -104,7 +104,7 @@ A timeout is a map with 3 positions: the number of milliseconds, an event
 that gets dispatched when the timeout is set (with the timeout id added) and
 and event that gets dispatched when the timer times out:
 
-```cljs
+```clojure
 {:ms 3000
  :set [::was-set] ;; dispatched as [::was-set timeout-id]
  :timeout [::timed-out]}
@@ -112,7 +112,7 @@ and event that gets dispatched when the timer times out:
 
 Similarly, an interval:
 
-```cljs
+```clojure
 {:ms 3000
  :set [::was-set] ;; dispatched as [::was-set interval-id]
  :interval [::period-reached]}
@@ -120,7 +120,7 @@ Similarly, an interval:
 
 These are given as arguments to events or effects, as follows:
 
-```cljs
+```clojure
 [::timeouts.c/set a-timeout] ;; event
 [::timeouts.c/clear a-timeout-id] ;; event
 
