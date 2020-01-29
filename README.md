@@ -56,7 +56,7 @@ In your view namespace require `tape.tools.ui.form`:
 
 ```clojure
 (ns blog.app.posts.view
-  (:require [tape.tools.ui.forms :as forms]))
+  (:require [tape.tools.ui.form :as form]))
 ```
 
 ##### Inputs
@@ -81,7 +81,7 @@ HTML5 Constraint Validation API.
 ```clojure
 (defn save-button []
   (let [save #(rf/dispatch [::posts.c/save])]
-    [:button {:on-click (ui/when-valid save)} "Save"]))
+    [:button {:on-click (form/when-valid save)} "Save"]))
 ```
 
 If the form to which the button above belongs is valid, on clicking the button
