@@ -46,7 +46,7 @@
 
 (defn- is-input [typ expected]
   (let [post      (r/atom {:title "title"})
-        actual    (form/field {:type typ, :state post, :field :title})
+        actual    (form/field {:type typ, :source post, :field :title})
         [actual-tag actual-attrs] actual
         on-change (:on-change actual-attrs)
         [expected-tag expected-attrs] expected]
@@ -60,10 +60,10 @@
 (defn- is-tick [typ visibility expected]
   (let [post      (r/atom {:visibility visibility})
         invert    {"public" nil, nil "public"}
-        actual    (form/field {:type  typ
-                               :state post
-                               :field :visibility
-                               :value "public"})
+        actual    (form/field {:type   typ
+                               :source post
+                               :field  :visibility
+                               :value  "public"})
         [actual-tag actual-attrs] actual
         on-change (:on-change actual-attrs)
         [expected-tag expected-attrs] expected]
@@ -76,7 +76,7 @@
   (let [post      (r/atom {:gender "man"})
         defaults  {:type    :select
                    :options options
-                   :state   post
+                   :source  post
                    :field   :gender}
         actual    (form/field (merge defaults m))
         [actual-tag actual-attrs & actual-children] actual
@@ -93,7 +93,7 @@
   (let [post      (r/atom {:gender initial-value})
         defaults  {:type    :select
                    :options options
-                   :state   post
+                   :source  post
                    :field   :gender}
         actual    (form/field (merge defaults m))
         [actual-tag actual-attrs & actual-children] actual

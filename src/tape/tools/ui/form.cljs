@@ -80,11 +80,11 @@
 ;;; Input
 
 (defn field
-  "Given an options map with a type, a reagent atom and a field, returns a
-  Hiccup input for it. Ex: `(input {:type :number :state state})`."
+  "Given an options map with a type, a reagent cursor source and a field,
+  returns a Hiccup input for it. Ex: `(input {:type :number :source get-set})`."
   [m]
-  (let [cursor (r/cursor (:state m) [(:field m)])]
-    (input (-> m (dissoc :field) (assoc :state cursor)))))
+  (let [cursor (r/cursor (:source m) [(:field m)])]
+    (input (-> m (dissoc :field :source) (assoc :state cursor)))))
 
 ;;; Constraint Validation
 

@@ -10,8 +10,3 @@
    (fn
      ([ks] (get-in @(rf/subscribe [kget]) ks))
      ([ks v] (rf/dispatch (conj (into [kset] ks) v))))))
-
-(defn cursor
-  ([k] (lens k k))
-  ([kget kset]
-   (r/cursor (lens kget kset) [])))

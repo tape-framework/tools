@@ -46,12 +46,12 @@
        [:div.column
         [:div.field
          [:div.control
-          [form/field (merge {:state entity :field :field} m)]]]]
+          [form/field (merge {:source entity :field :field} m)]]]]
        [:div.column [:pre (pr-str @entity)]]])))
 
 (defn- radio []
   (let [entity (r/atom {:field nil})
-        opts   {:state entity, :field :field, :type :radio, :name "radio"}]
+        opts   {:source entity, :field :field, :type :radio, :name "radio"}]
     (fn []
       [:div.columns
        [:div.column
@@ -65,7 +65,7 @@
   (let [entity   (r/atom {:field nil})
         defaults {:type    :select
                   :options options
-                  :state   entity
+                  :source  entity
                   :field   :field}]
     (fn [m]
       [:div.columns
@@ -73,7 +73,7 @@
         [:div.field
          [:div.control
           [:div.select {:class (when (:multiple m) "is-multiple")}
-           [form/input (merge defaults m)]]]]]
+           [form/field (merge defaults m)]]]]]
        [:div.column [:pre (pr-str @entity)]]])))
 
 (defcard-rg input-card
