@@ -61,16 +61,24 @@ In your view namespace require `tape.tools.ui.form`:
 
 ##### Inputs
 
-The `form/field` helper creates an input over an atom field. It's usually used
-in conjunction with a cursor over a `tools/lens`.
+The `form/field` helper creates an input over a cursor source (ratom or get-set
+fn).
 
 ```clojure
 (defn form-fields []
-  (let [cursor (tools/cursor ::posts.c/post ::posts.c/field)]
+  (let [lens (tools/lens ::posts.c/post ::posts.c/field)]
     [:<>
-     [form/field {:type :text, :state cursor, :field :title}]
-     [form/field {:type :textarea, :state cursor, :field :description}]]))
+     [form/field {:type :text, :source lens, :field :title}]
+     [form/field {:type :textarea, :source lens, :field :description}]]))
 
+```
+
+We assume the following 2 controller functions are present:
+
+```clojure
+(ns blog.app.posts.controller ...)
+(defn ^::c/event-db field [db [_ k v]] (assoc-in db [::post k] v))
+(defn ^::c/sub post [db _] (::post db))
 ```
 
 ##### Constraint Validation
