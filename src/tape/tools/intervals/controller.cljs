@@ -8,7 +8,8 @@
 (defn ^{::c/fx ::set} set-fx [m]
   (let [{:keys [ms set interval]} m
         id (js/setInterval #(rf/dispatch interval) ms)]
-    (rf/dispatch (conj set id))))
+    (when set
+      (rf/dispatch (conj set id)))))
 
 (defn ^{::c/fx ::clear} clear-fx [id] (js/clearInterval id))
 

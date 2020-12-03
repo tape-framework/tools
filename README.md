@@ -114,13 +114,13 @@ clearing timeouts and intervals.
 ;; also add ::timeouts.c/module & ::intervals.c/module to the ig config map
 ```
 
-A timeout is a map with 3 positions: the number of milliseconds, an event
-that gets dispatched when the timeout is set (with the timeout id added) and
-and event that gets dispatched when the timer times out:
+A timeout is a map with 3 positions: the number of milliseconds, an optional
+event that gets dispatched when the timeout is set (with the timeout id added)
+and an event that gets dispatched when the timer times out:
 
 ```clojure
 {:ms 3000
- :set [::was-set] ;; dispatched as [::was-set timeout-id]
+ :set [::was-set] ;; optional, dispatched as [::was-set timeout-id]
  :timeout [::timed-out]}
 ```
 
