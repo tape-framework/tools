@@ -87,6 +87,23 @@
    [select {:multiple true, :include-blank true}]
    [select {:multiple true}]])
 
+;;; Validation feedback
+
+(defn- field-with-list-errors [m]
+  (let [entity (r/atom {:field nil})]
+    (fn [m]
+      [:div.columns
+       [:div.column
+        [:div.field
+         [:div.control
+          [form/field-with-list-errors (merge {:source entity :field :field} m)]]]]
+       [:div.column [:pre (pr-str @entity)]]])))
+
+(defcard-rg field-with-list-errors-card
+  [:div
+   [field-with-list-errors {:type   :text, :class "input",
+                            :errors #{"Must be present" "Must be numeric"}}]])
+
 ;;; Constraint validation
 
 (defcard-rg constraint-validation-card

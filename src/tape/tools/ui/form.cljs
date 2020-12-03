@@ -86,6 +86,29 @@
   (let [cursor (r/cursor (:source m) [(:field m)])]
     (input (-> m (dissoc :field :source) (assoc :state cursor)))))
 
+(defn field-with-errors [m]
+  (let [{:keys [errors errors-class]} m
+        errors-class' (or errors-class "is-danger")
+        add-errors-class (fn [klass]
+                           (cond
+                             (vector? klass) (conj klass errors-class')
+                             (string? klass) (str klass " " errors-class')
+                             :else (throw (ex-info "Unknown class" {}))))
+        m' (-> m
+               (dissoc :errors :errors-class)
+               (cond->
+                (some? errors) (update :class add-errors-class)))]
+    [field m']))
+
+(defn list-errors [^PersistentHashSet errors]
+  (for [error errors]
+    [:p.help.is-danger {:key error} error]))
+
+(defn field-with-list-errors [m]
+  [:<>
+   [field-with-errors m]
+   (list-errors (:errors m))])
+
 ;;; Constraint Validation
 
 (defn- when-valid* [event f]

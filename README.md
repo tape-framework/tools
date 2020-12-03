@@ -81,6 +81,12 @@ We assume the following 2 controller functions are present:
 (defn ^::c/sub post [db _] (::post db))
 ```
 
+##### Validation feedback
+
+The `form/field-with-list-errors` is a drop-in replacement for `form/field`
+that adds the class `is-danger` on the input when there are `:errors` on the
+input map `m`, and also lists the errors below.
+
 ##### Constraint Validation
 
 The `form/when-valid` helper can be used on forms to to check and show the

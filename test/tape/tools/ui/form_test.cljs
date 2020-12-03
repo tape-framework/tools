@@ -140,6 +140,23 @@
       [:option {:key :woman, :value :woman} "Woman"])]
    '("man" "woman")))
 
+;; Field with errors
+
+(deftest field-with-list-test
+  (let [output (form/field-with-errors {:type   :text, :class "input",
+                                        :source (r/atom {:field nil}), :field :field
+                                        :errors #{"Must be present" "Must be numeric"}})]
+    (is (= "input is-danger"
+           (-> output second :class)))))
+
+(deftest field-with-list-errors-test
+  (let [output (form/field-with-list-errors {:type   :text, :class "input",
+                                             :source (r/atom {:field nil}), :field :field
+                                             :errors #{"Must be present" "Must be numeric"}})]
+    (is (= '([:p.help.is-danger {:key "Must be present"} "Must be present"]
+             [:p.help.is-danger {:key "Must be numeric"} "Must be numeric"])
+           (last output)))))
+
 ;;; When valid
 
 (deftest when-valid-test
