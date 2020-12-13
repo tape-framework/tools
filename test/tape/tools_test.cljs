@@ -6,7 +6,7 @@
             [tape.mvc.controller :as c :include-macros true]
             [tape.mvc.view :as v]
             [tape.module :as module :include-macros true]
-            [tape.tools :as tools]))
+            [tape.tools :as tools :include-macros true]))
 
 (module/load-hierarchy)
 
@@ -27,9 +27,18 @@
   {:before (fn [] (set! system (-> config module/prep-config ig/init)))
    :after  (fn [] (ig/halt! system))})
 
+(deftest lens*-test
+  (rft/run-test-sync
+   (let [lens   (tools/lens* ::todo ::field)
+         cursor (r/cursor lens [:done])]
+     (reset! cursor false)
+     (is (false? @cursor))
+     (swap! cursor not)
+     (is (true? @cursor)))))
+
 (deftest lens-test
   (rft/run-test-sync
-   (let [lens   (tools/lens ::todo ::field)
+   (let [lens   (tools/lens todo field)
          cursor (r/cursor lens [:done])]
      (reset! cursor false)
      (is (false? @cursor))

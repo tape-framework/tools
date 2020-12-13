@@ -2,9 +2,9 @@
   (:require [reagent.core :as r]
             [re-frame.core :as rf]))
 
-(defn lens
+(defn lens*
   "Creates a lens that reads from a subscription and writes by dispatching an
-  event. Ex: `(lens ::posts.c/post ::posts.c/field)`."
+  event. Ex: `(lens* ::posts.c/post ::posts.c/field)`."
   ([k] (lens k k))
   ([kget kset]
    (fn
