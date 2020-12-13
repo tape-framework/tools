@@ -5,7 +5,7 @@
 (defn lens*
   "Creates a lens that reads from a subscription and writes by dispatching an
   event. Ex: `(lens* ::posts.c/post ::posts.c/field)`."
-  ([k] (lens k k))
+  ([k] (lens* k k))
   ([kget kset]
    (fn
      ([ks] (get-in @(rf/subscribe [kget]) ks))
