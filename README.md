@@ -30,15 +30,15 @@ In your view namespace require `tape.tools`:
 ```clojure
 (ns blog.app.posts.view
   (:require [reagent.core :as r]
-            [tape.tools :as tools]))
+            [tape.tools :as tools :include-macros true]))
 ```
 
-A `tools/lens` is a helper for making cursors that read from a subscription and
+A `tools/lens*` is a helper for making cursors that read from a subscription and
 write by dispatching an event.
 
 ```clojure
 (defn form-fields []
-  (let [lens (tools/lens ::posts.c/post ::posts.c/field)
+  (let [lens (tools/lens* ::posts.c/post ::posts.c/field)
         title (r/cursor lens [:title])]
     [:input {:value @title
              :on-change #(reset! title (-> % .-target .-value))}]))
@@ -66,7 +66,7 @@ fn).
 
 ```clojure
 (defn form-fields []
-  (let [lens (tools/lens ::posts.c/post ::posts.c/field)]
+  (let [lens (tools/lens* ::posts.c/post ::posts.c/field)]
     [:<>
      [form/field {:type :text, :source lens, :field :title}]
      [form/field {:type :textarea, :source lens, :field :description}]]))
@@ -80,6 +80,14 @@ We assume the following 2 controller functions are present:
 (defn ^::c/event-db field [db [_ k v]] (assoc-in db [::post k] v))
 (defn ^::c/sub post [db _] (::post db))
 ```
+
+##### Lens Ergonomic API
+
+Ergonomic API uses macros with symbols of controller event handlers. Such
+symbols can be navigated via IDE "jump to definition". The macros are
+macroexpanded in the API above, so there's no performance penalty at runtime.
+
+`(tools/lens posts.c/post posts.c/field)`
 
 ##### Validation feedback
 
