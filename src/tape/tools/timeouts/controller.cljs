@@ -5,18 +5,29 @@
 
 ;;; Effects
 
-(defn ^{::c/fx ::set} set-fx [m]
-  (let [{:keys [ms set timeout]} m
-        id (js/setTimeout #(rf/dispatch timeout) ms)]
+(defn set-fx
+  {::c/reg ::c/fx
+   ::c/id ::set}
+  [atimeout]
+  (let [{:keys [ms set timeout]} atimeout
+        timeout-id (js/setTimeout #(rf/dispatch timeout) ms)]
     (when set
-      (rf/dispatch (conj set id)))))
+      (rf/dispatch (conj set timeout-id)))))
 
-(defn ^{::c/fx ::clear} clear-fx [id] (js/clearTimeout id))
+(defn clear-fx
+  {::c/reg ::c/fx
+   ::c/id ::clear}
+  [timeout-id] (js/clearTimeout timeout-id))
 
 ;;; Events
 
-(defn ^::c/event-fx set [_ [_ m]] {::set m})
-(defn ^::c/event-fx clear [_ [_ id]] {::clear id})
+(defn set
+  {::c/reg ::c/event-fx}
+  [_ [_ timeout]] {::set timeout})
+
+(defn clear
+  {::c/reg ::c/event-fx}
+  [_ [_ timeout-id]] {::clear timeout-id})
 
 ;;; Module
 

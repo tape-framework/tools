@@ -11,11 +11,21 @@
 
 (module/load-hierarchy)
 
-(defn ^::c/event-db set [db [_ id]] (assoc db ::timeout-id id))
-(defn ^::c/event-db timeout [db [_]] (assoc db ::timeout-done true))
+(defn set
+  {::c/reg ::c/event-db}
+  [db [_ id]] (assoc db ::timeout-id id))
 
-(defn ^::c/sub timeout-id [db _] (::timeout-id db))
-(defn ^::c/sub timeout-done [db _] (::timeout-done db))
+(defn timeout
+  {::c/reg ::c/event-db}
+  [db [_]] (assoc db ::timeout-done true))
+
+(defn timeout-id
+  {::c/reg ::c/sub}
+  [db _] (::timeout-id db))
+
+(defn timeout-done
+  {::c/reg ::c/sub}
+  [db _] (::timeout-done db))
 
 (c/defmodule)
 

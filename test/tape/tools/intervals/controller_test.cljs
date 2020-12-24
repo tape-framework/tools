@@ -11,14 +11,23 @@
 
 (module/load-hierarchy)
 
-(defn ^::c/event-db set [db [_ id]]
+(defn set
+  {::c/reg ::c/event-db}
+  [db [_ id]]
   (assoc db ::interval-id id
             ::interval-count 0))
 
-(defn ^::c/event-db interval [db _] (update db ::interval-count inc))
+(defn interval
+  {::c/reg ::c/event-db}
+  [db _] (update db ::interval-count inc))
 
-(defn ^::c/sub interval-id [db _] (::interval-id db))
-(defn ^::c/sub interval-count [db _] (::interval-count db))
+(defn interval-id
+  {::c/reg ::c/sub}
+  [db _] (::interval-id db))
+
+(defn interval-count
+  {::c/reg ::c/sub}
+  [db _] (::interval-count db))
 
 (c/defmodule)
 

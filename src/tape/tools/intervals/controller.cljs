@@ -5,18 +5,29 @@
 
 ;;; Effects
 
-(defn ^{::c/fx ::set} set-fx [m]
-  (let [{:keys [ms set interval]} m
-        id (js/setInterval #(rf/dispatch interval) ms)]
+(defn set-fx
+  {::c/reg ::c/fx
+   ::c/id ::set}
+  [ainterval]
+  (let [{:keys [ms set interval]} ainterval
+        interval-id (js/setInterval #(rf/dispatch interval) ms)]
     (when set
-      (rf/dispatch (conj set id)))))
+      (rf/dispatch (conj set interval-id)))))
 
-(defn ^{::c/fx ::clear} clear-fx [id] (js/clearInterval id))
+(defn clear-fx
+  {::c/reg ::c/fx
+   ::c/id ::clear}
+  [interval-id] (js/clearInterval interval-id))
 
 ;;; Events
 
-(defn ^::c/event-fx set [_ [_ m]] {::set m})
-(defn ^::c/event-fx clear [_ [_ id]] {::clear id})
+(defn set
+  {::c/reg ::c/event-fx}
+  [_ [_ interval]] {::set interval})
+
+(defn clear
+  {::c/reg ::c/event-fx}
+  [_ [_ interval-id]] {::clear interval-id})
 
 ;;; Module
 

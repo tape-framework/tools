@@ -10,8 +10,13 @@
 
 (module/load-hierarchy)
 
-(defn ^::c/event-db field [db [_ k v]] (assoc-in db [::todo k] v))
-(defn ^::c/sub todo [db _] (::todo db))
+(defn field
+  {::c/reg ::c/event-db}
+  [db [_ k v]] (assoc-in db [::todo k] v))
+
+(defn todo
+  {::c/reg ::c/sub}
+  [db _] (::todo db))
 
 (c/defmodule)
 
