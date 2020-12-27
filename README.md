@@ -21,10 +21,15 @@ tape/tools {:local/root "../tools"}
 ### Usage
 
 You must be familiar with `tape.module` and `tape.mvc` (particularly the
-controller part) before proceeding. Require as:
+controller part) before proceeding. Depending on pieces used, require as:
 
 ```clojure
-(:require [tape.tools :as tools])
+(:require
+ [tape.tools :as tools :include-macros true]
+ [tape.tools.current.controller :as current.c]
+ [tape.tools.timeouts.controller :as timeouts.c]
+ [tape.tools.intervals.controller :as intervals.c]
+ [tape.tools.ui.form :as form])
 ```
 
 #### Ergonomic API
@@ -137,7 +142,7 @@ clearing timeouts and intervals.
 (ns my.app
   (:require [tape.tools.timeouts.controller :as timeouts.c]
             [tape.tools.intervals.controller :as intervals.c]))
-;; also add ::timeouts.c/module & ::intervals.c/module to the ig config map
+;; also add ::timeouts.c/module & ::intervals.c/module to the modules config map
 ```
 
 A timeout is a map with 3 positions: the number of milliseconds, an optional
@@ -173,6 +178,33 @@ These are given as arguments to events or effects, as follows:
 {::intervals.c/set an-interval} ;; effect
 {::intervals.c/clear an-interval-id} ;; effect
 ```
+
+#### Current view
+
+The "current page" that changes alongside the URL (whether via hash-change or
+History API) is so established on the web that we decided to make it available
+by default.
+
+```clojure
+(ns my.app
+  (:require [tape.tools.current.controller :as current.c]))
+;; also add ::current.c/module to the modules config map
+```
+
+The "current view" is set in app-db under `::current.c/view`. It's value is an
+event keyword (controller namespaced), for example:
+`:blog.app.posts.controller/index`.
+
+The "current view" is automatically set in app-db by an interceptor if not set
+already from the event handler, if there exists a view corresponding to the
+event, per the naming convention. This interceptor is added to all handlers that
+have matching views; example: `blog.app.posts.controller/index` ->
+`blog.app.posts.view/index`.
+
+There are two subscriptions:
+- `(rf/subscribe [::current.c/view])` yields the event set.
+- `(rf/subscribe [::current.c/view-fn])` yields the view function that can be
+  rendered in Reagent layouts.
 
 #### License
 
