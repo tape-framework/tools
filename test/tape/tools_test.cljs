@@ -1,14 +1,30 @@
 (ns tape.tools-test
   (:require [cljs.test :refer [deftest is use-fixtures]]
-            [day8.re-frame.test :as rft]
             [integrant.core :as ig]
             [reagent.core :as r]
+            [re-frame.core :as rf]
+            [day8.re-frame.test :as rft]
             [tape.mvc.controller :as c :include-macros true]
             [tape.mvc.view :as v]
             [tape.module :as module :include-macros true]
-            [tape.tools :as tools :include-macros true]))
+            [tape.tools :as tools :include-macros true]
+            [tape.tools.app.controller :as app.c]))
 
 (module/load-hierarchy)
+
+;;; Ergonomic API
+
+(deftest dispatch-test
+  (with-redefs [rf/dispatch identity]
+    (is (= [::app.c/event-db]
+           (tools/dispatch [app.c/event-db])))))
+
+(deftest subscribe-test
+  (with-redefs [rf/subscribe identity]
+    (is (= [::app.c/sub]
+           (tools/subscribe [app.c/sub])))))
+
+;;; Lens
 
 (defn field
   {::c/reg ::c/event-db}

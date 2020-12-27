@@ -21,7 +21,25 @@ tape/tools {:local/root "../tools"}
 ### Usage
 
 You must be familiar with `tape.module` and `tape.mvc` (particularly the
-controller part) before proceeding.
+controller part) before proceeding. Require as:
+
+```clojure
+(:require [tape.tools :as tools])
+```
+
+#### Ergonomic API
+
+To allow IDE navigation, we have two macros that proxy to Re-Frame:
+
+```clojure
+(tools/dispatch [posts.c/index]) ;; => (rf/dispatch [::posts.c/index])
+(tools/subscribe [posts.c/posts]) ;; => (rf/subscribe [::posts.c/posts])
+```
+
+In their use, the macros accept events with a symbol form (that can be
+navigated via IDE), but once compiled, they are in the standard Re-Frame API
+with no performance penalty. Added vaue: the handler existance is checked at
+compile time, and typos are avoided.
 
 #### The lens pattern
 
