@@ -1,10 +1,8 @@
 (ns tape.tools.current.controller-test
-  (:require [cljs.test :refer [deftest is are run-tests]]
+  (:require [cljs.test :refer [deftest testing is are]]
             [integrant.core :as ig]
             [re-frame.core :as rf]
             [tape.module :as module :include-macros true]
-            [tape.mvc.controller :as c]
-            [tape.mvc.view :as v]
             [tape.mvc :as mvc]
             [tape.tools.current.controller :as current.c]
             [tape.tools.app.controller :as app.c]
@@ -14,8 +12,8 @@
 
 (deftest derive-test
   (are [x y] (isa? x y)
-    ::current.c/view ::c/sub
-    ::current.c/view-fn ::c/sub))
+    ::current.c/view ::mvc/sub
+    ::current.c/view-fn ::mvc/sub))
 
 (defn ^:private view [] [:p "p"])
 (def ^:private views {:some.c/event view})
@@ -37,16 +35,10 @@
                 (is (= nil (current-fn db2 nil)))))
 
 (def ^:private config
-  {::c/module nil
-   ::v/module nil
-   ::mvc/module nil
+  {::mvc/module nil
    ::current.c/module nil
    ::app.c/module nil
    ::app.v/module nil})
-
-(def system (-> config
-                module/prep-config
-                (ig/init [:tape.mvc/main :tape/multi])))
 
 (deftest reg-test
   (let [system (-> config
@@ -59,5 +51,3 @@
     (is (= ::app.c/event-db @(rf/subscribe [::current.c/view])))
     (is (= app.v/event-db (.-afn @(rf/subscribe [::current.c/view-fn]))))
     (ig/halt! system)))
-
-(run-tests)

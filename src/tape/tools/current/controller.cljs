@@ -1,13 +1,12 @@
 (ns tape.tools.current.controller
   (:require [integrant.core :as ig]
             [re-frame.core :as rf]
-            [tape.mvc.controller :as c :include-macros true]
-            [tape.mvc.view :as v]))
+            [tape.mvc :as mvc :include-macros true]))
 
 ;;; Subs
 
 (defn view
-  {::c/reg ::c/sub}
+  {::mvc/reg ::mvc/sub}
   [db _] (::view db))
 
 ;;; Integrant
@@ -31,5 +30,6 @@
 
 ;;; Module
 
-(c/defmodule {::view-interceptor (ig/ref ::v/views)
-              ::view-fn (ig/ref ::v/views)})
+(mvc/defm ::module
+          {::view-interceptor (ig/ref ::mvc/views)
+           ::view-fn (ig/ref ::mvc/views)})

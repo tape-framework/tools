@@ -1,4 +1,4 @@
-(ns tape.tools.ui.form-cards
+(ns tape.tools.ui.form-devcards
   (:require [reagent.core :as r]
             [devcards.core :refer-macros [defcard-rg]]
             [tape.tools.ui.form :as form]))

@@ -1,5 +1,5 @@
-(ns tape.tools.cards
+(ns tape.tools.devcards
   (:require [devcards.core :as devcards]
-            [tape.tools.ui.form-cards]))
+            [tape.tools.ui.form-devcards]))
 
 (devcards/start-devcard-ui!)

@@ -1,4 +1,4 @@
 #:tape.tools.current.controller
     {:view-interceptor [:tape/multi]
-     :view [:tape.mvc.controller/sub]
-     :view-fn [:tape.mvc.controller/sub]}
+     :view [:tape.mvc/sub]
+     :view-fn [:tape.mvc/sub]}
