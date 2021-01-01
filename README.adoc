@@ -27,50 +27,21 @@ controller part) before proceeding. Depending on pieces used, require as:
 [source,clojure]
 ----
 (:require
- [tape.tools :as tools :include-macros true]
  [tape.tools.current.controller :as current.c]
  [tape.tools.timeouts.controller :as timeouts.c]
  [tape.tools.intervals.controller :as intervals.c]
- [tape.tools.ui.form :as form])
+ [tape.tools.ui.form :as form :include-macros true])
 ----
-
-==== Ergonomic API
-
-To allow IDE navigation, we have two macros that proxy to Re-Frame:
-
-[source,clojure]
-----
-(tools/dispatch [posts.c/index])
-;; => (rf/dispatch [::posts.c/index])
-
-(tools/subscribe [posts.c/posts])
-;; => (rf/subscribe [::posts.c/posts])
-----
-
-In their use, the macros accept events with a symbol form (that can be
-navigated via IDE), but once compiled, they are in the standard Re-Frame API
-with no performance penalty. Added value: the handler existence is checked at
-compile time, and typos are avoided.
 
 ==== The lens pattern
 
-In your view namespace require `tape.tools`:
-
-.app/posts/view.cljs
-[source,clojure]
-----
-(ns blog.app.posts.view
-  (:require [reagent.core :as r]
-            [tape.tools :as tools :include-macros true]))
-----
-
-A `tools/lens*` is a helper for making cursors that read from a subscription and
+A `form/lens*` is a helper for making cursors that read from a subscription and
 write by dispatching an event.
 
 [source,clojure]
 ----
 (defn form-fields []
-  (let [lens (tools/lens* ::posts.c/post ::posts.c/field)
+  (let [lens (form/lens* ::posts.c/post ::posts.c/field)
         title (r/cursor lens [:title])]
     [:input {:value @title
              :on-change #(reset! title (-> % .-target .-value))}]))
@@ -80,16 +51,7 @@ When the `title` cursor above is `reset!`, it dispatches an event:
 `[::posts.c/field :title "some value"]`. When it is `deref` 'ed it reads the
 `(:title @(rf/subscription [::posts.c/post]))` value.
 
-`tools/cursor` directly returns a Reagent cursor over a lens.
-
 ==== Form tools
-
-In your view namespace require `tape.tools.ui.form`:
-
-```clojure
-(ns blog.app.posts.view
-  (:require [tape.tools.ui.form :as form]))
-```
 
 ===== Inputs
 
@@ -99,7 +61,7 @@ fn).
 [source,clojure]
 ----
 (defn form-fields []
-  (let [lens (tools/lens* ::posts.c/post ::posts.c/field)]
+  (let [lens (form/lens* ::posts.c/post ::posts.c/field)]
     [:<>
      [form/field {:type :text, :source lens, :field :title}]
      [form/field {:type :textarea, :source lens, :field :description}]]))
@@ -122,7 +84,7 @@ Ergonomic API uses macros with symbols of controller event handlers. Such
 symbols can be navigated via IDE "jump to definition". The macros are
 macroexpanded in the API above, so there's no performance penalty at runtime.
 
-`(tools/lens posts.c/post posts.c/field)`
+`(form/lens posts.c/post posts.c/field)`
 
 ===== Validation feedback
 
@@ -149,15 +111,8 @@ not called, and the form validity is reported.
 ==== Timeouts and Intervals
 
 We have two controllers with event handlers and effect handlers for setting and
-clearing timeouts and intervals.
-
-[source,clojure]
-----
-(ns my.app
-  (:require [tape.tools.timeouts.controller :as timeouts.c]
-            [tape.tools.intervals.controller :as intervals.c]))
-;; also add ::timeouts.c/module & ::intervals.c/module to the modules config map
-----
+clearing timeouts and intervals. Don't forget to add `::timeouts.c/module` &
+`::intervals.c/module` to the modules config map.
 
 A timeout is a map with 3 positions: the number of milliseconds, an optional
 event that gets dispatched when the timeout is set (with the timeout id added)
@@ -200,14 +155,7 @@ These are given as arguments to events or effects, as follows:
 
 The "current page" that changes alongside the URL (whether via hash-change or
 History API) is so established on the web that we decided to make it available
-by default.
-
-[source,clojure]
-----
-(ns my.app
-  (:require [tape.tools.current.controller :as current.c]))
-;; also add ::current.c/module to the modules config map
-----
+by default. Add `::current.c/module` to the modules config map.
 
 The "current view" is set in app-db under `::current.c/view`. It's value is an
 event keyword (controller namespaced), for example:

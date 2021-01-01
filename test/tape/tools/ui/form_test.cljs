@@ -1,7 +1,41 @@
 (ns tape.tools.ui.form-test
-  (:require [cljs.test :refer [deftest is are]]
+  (:require [cljs.test :refer [deftest testing is are]]
+            [integrant.core :as ig]
             [reagent.core :as r]
-            [tape.tools.ui.form :as form]))
+            [re-frame.core :as rf]
+            [day8.re-frame.test :as rft]
+            [tape.module :as module :include-macros true]
+            [tape.mvc :as mvc :include-macros true]
+            [tape.tools.ui.form :as form :include-macros true]
+            [tape.tools.app.controller :as app.c]))
+
+(module/load-hierarchy)
+
+;;; Lens
+
+(def ^:private config
+  {::mvc/module nil
+   ::app.c/module nil})
+
+(deftest lens-test
+  (let [system (-> config module/prep-config ig/init)]
+    (testing "lens*"
+      (rft/run-test-sync
+       (let [lens (form/lens* ::app.c/todo ::app.c/field)
+             cursor (r/cursor lens [:done])]
+         (reset! cursor false)
+         (is (false? @cursor))
+         (swap! cursor not)
+         (is (true? @cursor)))))
+    (testing "lens"
+      (rft/run-test-sync
+       (let [lens (form/lens app.c/todo app.c/field)
+             cursor (r/cursor lens [:done])]
+         (reset! cursor false)
+         (is (false? @cursor))
+         (swap! cursor not)
+         (is (true? @cursor)))))
+    (ig/halt! system)))
 
 ;;; Input tag
 
