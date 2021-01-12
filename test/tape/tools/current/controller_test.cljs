@@ -10,11 +10,6 @@
 
 (module/load-hierarchy)
 
-(deftest derive-test
-  (are [x y] (isa? x y)
-    ::current.c/view ::mvc/sub
-    ::current.c/view-fn ::mvc/sub))
-
 (defn ^:private view [] [:p "p"])
 (def ^:private views {:some.c/event view})
 

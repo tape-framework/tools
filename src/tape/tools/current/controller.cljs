@@ -29,7 +29,7 @@
                          add? (assoc ::view event-id))))))
 
 ;;; Module
-
+(prefer-method ig/init-key ::view-fn :tape/const)
 (mvc/defm ::module
           {::view-interceptor (ig/ref ::mvc/views)
-           ::view-fn (ig/ref ::mvc/views)})
+           [::view-fn ::mvc/sub] (ig/ref ::mvc/views)})
